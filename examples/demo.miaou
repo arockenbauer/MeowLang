@@ -1,0 +1,75 @@
+miaou
+
+ecrire "🐾 Bienvenue dans MeowLang v1.0"
+ecrire "Un langage élégant, félin et francophone."
+ecrire "----------------------------------------"
+
+nom = demander texte "Comment t'appelles-tu, humain ?"
+age = demander nombre "Quel est ton âge ?"
+
+ecrire "Enchanté" nom "!"
+
+si age < 10 alors:
+  ecrire "Tu es encore un chaton 🐱"
+sinon si age < 18 alors:
+  ecrire "Un jeune félin plein d'énergie 😸"
+sinon:
+  ecrire "Un vieux matou sage 😼"
+
+reponse = demander texte "Aimes-tu les chats ? (oui/non)"
+reponse = minuscule reponse
+
+si reponse = "oui" alors:
+  ecrire "Bonne réponse. Les chats t'acceptent 🐾"
+sinon:
+  ecrire "Les chats te jugent en silence 😾"
+
+ecrire "Compte jusqu'à 5 avec moi :"
+
+repeter 5 fois:
+  ecrire compteur
+
+secret = "croquette"
+tentative = ""
+
+tant que tentative != secret:
+  tentative = demander texte "Mot secret ?"
+  ecrire "Hmm..."
+
+ecrire "Accès autorisé au royaume des chats 🏰🐈"
+
+fonction saluer(nom):
+  ecrire "Miaou" nom "!"
+
+saluer(nom)
+
+croquettes = 3
+croquettes = croquettes * 4 + 2
+ecrire "Nombre de croquettes :" croquettes
+
+chats = liste("Minou", "Pixel", "Gribouille", "Salem")
+
+pour chaque chat dans chats:
+  ecrire "🐾" chat
+
+chance = aleatoire 1 a 100
+
+si chance > 80 alors:
+  ecrire "Le chat te choisit comme humain favori 😻"
+sinon:
+  ecrire "Le chat t'ignore royalement 😼"
+
+essayer:
+  nombre = demander nombre "Donne un nombre :"
+  resultat = 10 / nombre
+  ecrire "Résultat :" resultat
+sauf erreur:
+  ecrire "Division interdite par le Conseil des Chats 🚫🐱"
+
+ecrire "Sieste en cours..."
+attendre 2
+ecrire "Réveil brutal 😾"
+
+ecrire "Merci d'avoir joué avec MeowLang."
+
+meow

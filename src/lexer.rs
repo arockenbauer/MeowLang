@@ -2,7 +2,7 @@ use crate::token::{Token, TokenType, TokenValue};
 use crate::error::{ErrorCatalog, MeowLangError};
 
 pub struct Lexer {
-    source: String,
+    chars: Vec<char>,
     filename: String,
     lines: Vec<String>,
     pos: usize,
@@ -16,9 +16,10 @@ pub struct Lexer {
 impl Lexer {
     pub fn new(source: String, filename: String) -> Self {
         let lines: Vec<String> = source.lines().map(|s| s.to_string()).collect();
+        let chars: Vec<char> = source.chars().collect();
         
         Lexer {
-            source,
+            chars,
             filename,
             lines,
             pos: 0,
@@ -31,11 +32,19 @@ impl Lexer {
     }
     
     fn current_char(&self) -> Option<char> {
-        self.source.chars().nth(self.pos)
+        if self.pos < self.chars.len() {
+            Some(self.chars[self.pos])
+        } else {
+            None
+        }
     }
     
     fn peek_char(&self, offset: usize) -> Option<char> {
-        self.source.chars().nth(self.pos + offset)
+        if self.pos + offset < self.chars.len() {
+            Some(self.chars[self.pos + offset])
+        } else {
+            None
+        }
     }
     
     fn advance(&mut self) {
@@ -137,7 +146,7 @@ impl Lexer {
             }
         }
         
-        let number_str = &self.source[start..self.pos];
+        let number_str: String = self.chars[start..self.pos].iter().collect();
         let number = number_str.parse::<f64>().unwrap_or(0.0);
         (number, has_dot)
     }
@@ -153,7 +162,7 @@ impl Lexer {
             }
         }
         
-        self.source[start..self.pos].to_string()
+        self.chars[start..self.pos].iter().collect()
     }
     
     fn get_keyword_token(&mut self, identifier: &str, line: usize, column: usize) -> Token {
@@ -238,8 +247,6 @@ impl Lexer {
             "ou" => Token::simple(TokenType::Ou, line, column),
             "non" => Token::simple(TokenType::Non, line, column),
             "a" => Token::simple(TokenType::A, line, column),
-            "texte" => Token::simple(TokenType::Texte, line, column),
-            "nombre" => Token::simple(TokenType::Nombre, line, column),
             _ => Token::new(TokenType::Identifier, TokenValue::String(identifier.to_string()), line, column),
         }
     }
@@ -248,7 +255,8 @@ impl Lexer {
         let mut pos = self.pos;
         let mut result = String::new();
         
-        while let Some(ch) = self.source.chars().nth(pos) {
+        while pos < self.chars.len() {
+            let ch = self.chars[pos];
             if ch.is_alphanumeric() || ch == '_' {
                 result.push(ch);
                 pos += 1;
@@ -285,7 +293,7 @@ impl Lexer {
     }
     
     pub fn tokenize(&mut self) -> Result<Vec<Token>, MeowLangError> {
-        while self.pos < self.source.len() {
+        while self.pos < self.chars.len() {
             if self.at_line_start {
                 let mut indent_level = 0;
                 
