@@ -1,0 +1,17 @@
+[package]
+name = "meowlang"
+version = "1.0.0"
+edition = "2021"
+authors = ["Shadow"]
+description = "Un langage de programmation élégant, félin et francophone 🐱"
+license = "MIT"
+
+[[bin]]
+name = "meowlang"
+path = "src/main.rs"
+
+[dependencies]
+colored = "2.1"
+rand = "0.8"
+
+[dev-dependencies]

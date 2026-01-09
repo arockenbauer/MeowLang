@@ -1,0 +1,14 @@
+miaou
+
+ecrire "🐾 Bonjour le monde depuis MeowLang!"
+ecrire "Voici un test simple du lexer"
+
+nom = "Chat"
+age = 3
+
+si age < 5 alors:
+  ecrire "Jeune chaton"
+sinon:
+  ecrire "Chat mature"
+
+meow
