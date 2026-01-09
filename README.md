@@ -5,13 +5,14 @@ Un langage de programmation élégant, félin et francophone.
 ## Installation
 
 ```bash
-pip install -e .
+cargo install --path .
 ```
 
 ## Développement
 
 ```bash
-pip install -r requirements-dev.txt
+cargo build
+cargo test
 ```
 
 ## Usage
