@@ -1,0 +1,56 @@
+name: Release MeowLang
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            artifact_name: meowlang
+            asset_name: meowlang-linux-x64
+            binary_path: target/release/meowlang
+          - os: windows-latest
+            artifact_name: meowlang.exe
+            asset_name: meowlang-windows-x64.exe
+            binary_path: target/release/meowlang.exe
+          - os: macos-latest
+            artifact_name: meowlang
+            asset_name: meowlang-macos-x64
+            binary_path: target/release/meowlang
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Build release
+        run: cargo build --release --verbose
+
+      - name: Strip binary (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        run: strip ${{ matrix.binary_path }}
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ matrix.binary_path }}
+          name: ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
