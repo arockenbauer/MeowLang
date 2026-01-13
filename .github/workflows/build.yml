@@ -11,19 +11,22 @@ jobs:
   build:
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         include:
           - os: ubuntu-latest
             artifact_name: meowlang-linux
-            binary_path: target/release/meowlang
+            binary_path: target/release/meowlang-linux
+
           - os: windows-latest
             artifact_name: meowlang-windows
-            binary_path: target/release/meowlang.exe
+            binary_path: target/release/meowlang-windows.exe
+
           - os: macos-latest
             artifact_name: meowlang-macos
-            binary_path: target/release/meowlang
+            binary_path: target/release/meowlang-macos
 
     steps:
       - name: Checkout code
@@ -54,6 +57,17 @@ jobs:
 
       - name: Build release
         run: cargo build --release --verbose
+
+      - name: Rename binary per OS
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            mv target/release/meowlang.exe target/release/meowlang-windows.exe
+          elif [ "${{ runner.os }}" = "macOS" ]; then
+            mv target/release/meowlang target/release/meowlang-macos
+          else
+            mv target/release/meowlang target/release/meowlang-linux
+          fi
+        shell: bash
 
       - name: Run tests
         run: cargo test --verbose
